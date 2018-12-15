@@ -3,10 +3,9 @@ import React from "react";
 
 function validateForm(check, data, field, err) {
     const {
-        fullName, DOB, gender, email, phoneNumber, lastQualification, studentCnic, fatherName,
-        homeAddress, province, course, image, fatherCnic, city
+        fullName, dob, gender, email, phoneNumber, lastQualification, studentCnic, fatherName,
+        homeAddress, province, course, image, fatherCnic, city,imageUrl
     } = data;
-
     var errors = err ? err : {
         hasError: false,
         errorsObj: {}
@@ -38,23 +37,23 @@ function validateForm(check, data, field, err) {
             ],
             elem: "fatherName"
         },
-        // image: {
-        //     Validate: [
-        //         {
-        //             condition: !image,
-        //             message: "Please select your picture",
-        //         },
-        //         {
-        //             condition: image && image.size > 1000000,
-        //             message: "Image size must be less than 1 MB",
-        //         },
-        //         {
-        //             condition: image && !image.type.toLowerCase().match(/\/(jpg|jpeg|png)$/i),
-        //             message: " Please select a valid image . "
-        //         }
-        //     ],
-        //     elem: "imagePicker"
-        // },
+        imageSelector: {
+            Validate: [
+                {
+                    condition: !imageUrl && !image,
+                    message: "Please select your picture",
+                },
+                {
+                    condition:  image && image.size > 1000000,
+                    message: "Image size must be less than 1 MB",
+                },
+                {
+                    condition:  image && !image.type.toLowerCase().match(/\/(jpg|jpeg|png)$/i),
+                    message: " Please select a valid image . "
+                }
+            ],
+            elem: "imageSelector"
+        },
         homeAddress: {
             Validate: [
                 {

@@ -35,6 +35,7 @@ class StudetnMiddleware {
             dispatch(StudentActions.editStudent(data))
             axios.post(`${Path.STUDENT_EDIT}`, {
                 data:data.userData,
+                studentCnic:data.originalCnic,
                 databaseToken: data.databaseToken
             })
             .then((response) => {

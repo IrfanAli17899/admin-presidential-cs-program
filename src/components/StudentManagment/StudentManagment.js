@@ -20,7 +20,12 @@ class StudentManagment extends Component {
     }
     componentWillReceiveProps(nextProps) {
         console.log("Student in componentWillReceiveProps", nextProps.student);
-        this.setState({ studentData: nextProps.student })
+        this.setState({
+            studentData: nextProps.student,
+            originalCnic: nextProps.student
+                ? nextProps.student.studentCnic
+                : null
+        })
     }
 
     submit = (ev) => {
@@ -30,15 +35,15 @@ class StudentManagment extends Component {
     }
     edit = (ev) => {
         const { studentData, errors } = this.state;
-        console.log(ev.target.name);
         switch (ev.target.name) {
             case "imageSelector":
-                console.log(this.imageFile.files[0]);
+                studentData.image = this.imageFile.files[0]
                 this.setState({
-                    newImage: this.refs.imagePicker.files[0]
-                        ? URL.createObjectURL(this.refs.imagePicker.files[0])
+                    newImage: this.imageFile.files[0]
+                        ? URL.createObjectURL(this.imageFile.files[0])
                         : null,
-                    imageFile: this.imageFile.files[0]
+                    imageFile: this.imageFile.files[0],
+                    errors: validateForm("each", studentData, ev.target.name, errors)
                 })
                 break;
             case "distanceLearning":
@@ -58,10 +63,37 @@ class StudentManagment extends Component {
         }
 
     }
+    submitEdit = (ev) => {
+        ev.preventDefault();
+        const { studentData, imageFile, originalCnic } = this.state;
+        studentData.image = imageFile;
+        var validate = validateForm("all", studentData);
+        if (validate.hasError) {
+            this.setState({ errors: validate });
+            return
+        }
+        const data = {
+            userData: studentData,
+            originalCnic,
+            databaseToken: this.props.user.databaseToken
+        };
+        console.log({
+            userData: studentData,
+            studentCnic: originalCnic,
+            databaseToken: this.props.user.databaseToken
+        });
+        
+        // console.log(this.props);
+
+
+        this.props.update(data);
+
+
+    }
 
     render() {
         const { student } = this.props;
-        const { studentData, disabled, errors } = this.state;
+        const { studentData, disabled, errors, newImage } = this.state;
         return (
             <div className="container-fluid">
 
@@ -95,8 +127,8 @@ class StudentManagment extends Component {
                         </form>
                     </div>
                 </div>
-                {this.props.student && <StudentData errors={errors} data={studentData} parentThis={this} onChange={(ev) => this.edit(ev)} disabled={disabled} />}
-                {this.props.student && <button type="button" onClick={(ev) => this.setState({ disabled: false })}>Edit</button>}
+                {this.props.student && <StudentData onSubmit={this.submitEdit} newImage={newImage} errors={errors} data={studentData} parentThis={this} onChange={(ev) => this.edit(ev)} disabled={disabled} />}
+                {this.props.student && disabled && <button type="button" onClick={(ev) => this.setState({ disabled: false })}>Edit</button>}
                 {this.props.student && <button type="button">Approve</button>}
             </div>
         )
