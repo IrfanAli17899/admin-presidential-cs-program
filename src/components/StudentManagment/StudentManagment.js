@@ -118,6 +118,9 @@ function mapDispatchToProps(dispatch) {
     return {
         search: data => {
             dispatch(StudentMiddleware.search(data));
+        },
+        update: data => {
+            dispatch(StudentMiddleware.update(data));
         }
     };
 }

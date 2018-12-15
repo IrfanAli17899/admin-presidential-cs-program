@@ -14,5 +14,7 @@ export default class path {
 
     static STUDENT_SEARCH = path.BASE_URL + '/admin/student/find';
 
+    static STUDENT_EDIT = path.BASE_URL + '/admin/student/edit';
+
 
 }

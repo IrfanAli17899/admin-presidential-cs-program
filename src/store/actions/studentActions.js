@@ -31,7 +31,7 @@ class StudentActions {
         }
     }
 
-    static  editStudent(data){
+    static editStudent(data){
         return {
             type : this.EDIT_STUDENT,
             data : data
