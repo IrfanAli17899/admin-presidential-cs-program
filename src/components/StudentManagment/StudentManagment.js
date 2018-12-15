@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Select, Input } from "../Input/input"
+import StudentMiddleware from "../../store/middleware/studentMiddleware";
+import { connect } from "react-redux"
 
 class StudentManagment extends Component {
     constructor(props) {
@@ -9,24 +11,23 @@ class StudentManagment extends Component {
             identityValue:""
         }
     }
+    componentWillReceiveProps(nextProps) {
+        console.log("Student in componentWillReceiveProps",nextProps.student);
+      }
 
-    Submit = (ev) => {
+    submit = (ev) => {
         ev.preventDefault();
         const { identity, identityValue } = this.state;
-        
-
-
-
+        this.props.search({ type:identity, value:identityValue, databaseToken:this.props.user.databaseToken });
     }
 
     render() {
-        console.log(this.props);
-
         return (
             <div className="container-fluid">
+            
                 <div className="container">
                     <div className="student-form-wrapper">
-                        <form action="" method="post">
+                        <form onSubmit={(ev) => this.submit(ev)} method="post">
                             <Select
                                 label="Select Identity"
                                 name="identity"
@@ -34,7 +35,7 @@ class StudentManagment extends Component {
                                 options={[
                                     { name: "CNIC", value: "cnic" },
                                     { name: "Number", value: "phoneNumber" },
-                                    { name: "Roll Number", value: "rollNumber" },
+                                    { name: "Roll Number", value: "rollNo" },
                                     { name: "Email", value: "email" },
 
                                 ]}
@@ -54,9 +55,29 @@ class StudentManagment extends Component {
                         </form>
                     </div>
                 </div>
+                {this.props.student? this.props.student.fullName:"Not found"}
             </div>
         )
     }
 }
 
-export default StudentManagment;
+function mapStateToProps(state) {
+    return {
+        user: state.authReducer.user,
+        isLoading: state.studentReducer.isLoading,
+        isError: state.studentReducer.isError,
+        errorMessage: state.studentReducer.errorMessage,
+        successMessage: state.studentReducer.successMessage,
+        student: state.studentReducer.student
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        search: data => {
+            dispatch(StudentMiddleware.search(data));
+        }
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(StudentManagment);

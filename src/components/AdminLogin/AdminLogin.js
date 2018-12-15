@@ -36,9 +36,7 @@ class AdminLogin extends Component {
             return;
         }
         this.props.authenticate({userName:username,password})
-    }
-
-    
+    }  
 
 
     render() {
@@ -52,7 +50,7 @@ class AdminLogin extends Component {
                                 <h3>Admin Sign in</h3>
                                 {errors.hasError && <p>{errors.simpleError}</p>}
                                 <Input
-                                    label="Username"
+                                    label="Username "
                                     type="text"
                                     name="username"
                                     id="username"
@@ -60,7 +58,7 @@ class AdminLogin extends Component {
                                 />
 
                                 <Input
-                                    label="Password"
+                                    label="Password "
                                     type="password"
                                     name="password"
                                     id="password"
@@ -101,7 +99,4 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(AdminLogin);
+export default connect(mapStateToProps, mapDispatchToProps)(AdminLogin);

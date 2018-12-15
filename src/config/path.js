@@ -12,5 +12,7 @@ export default class path {
 
     static AUTHENTICATE = path.BASE_URL + '/adminauth';
 
+    static STUDENT_SEARCH = path.BASE_URL + '/admin/student/find';
+
 
 }
