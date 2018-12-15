@@ -44,7 +44,7 @@ class Routers extends Component {
                 </Switch>
               </div>
           </div>
-          <Copyright />
+          {/* <Copyright /> */}
         </div>
 
       </Router>

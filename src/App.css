@@ -35,3 +35,12 @@
   display: flex;
   
 }
+
+
+.admit-card-image{
+  width: 150px ;
+  height: 150px;
+  background-position: 50% 50%;
+  background-size: contain;
+  background-color: black;
+}

@@ -2,29 +2,69 @@ import React, { Component } from "react";
 import { Select, Input } from "../Input/input"
 import StudentMiddleware from "../../store/middleware/studentMiddleware";
 import { connect } from "react-redux"
+import StudentData from "./StudentData"
+import { validateForm } from "./helper"
 
 class StudentManagment extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            identity:"",
-            identityValue:""
+            identity: "",
+            identityValue: "",
+            disabled: true,
+            errors: {
+                hasError: false,
+                errorsObj: {}
+            }
         }
     }
     componentWillReceiveProps(nextProps) {
-        console.log("Student in componentWillReceiveProps",nextProps.student);
-      }
+        console.log("Student in componentWillReceiveProps", nextProps.student);
+        this.setState({ studentData: nextProps.student })
+    }
 
     submit = (ev) => {
         ev.preventDefault();
         const { identity, identityValue } = this.state;
-        this.props.search({ type:identity, value:identityValue, databaseToken:this.props.user.databaseToken });
+        this.props.search({ type: identity, value: identityValue, databaseToken: this.props.user.databaseToken });
+    }
+    edit = (ev) => {
+        const { studentData, errors } = this.state;
+        console.log(ev.target.name);
+        switch (ev.target.name) {
+            case "imageSelector":
+                console.log(this.imageFile.files[0]);
+                this.setState({
+                    newImage: this.refs.imagePicker.files[0]
+                        ? URL.createObjectURL(this.refs.imagePicker.files[0])
+                        : null,
+                    imageFile: this.imageFile.files[0]
+                })
+                break;
+            case "distanceLearning":
+                studentData['distanceLearning'] = !studentData.distanceLearning;
+                this.setState({
+                    studentData
+                });
+                break;
+
+            default:
+                studentData[ev.target.name] = ev.target.value;
+                this.setState({
+                    studentData,
+                    errors: validateForm("each", studentData, ev.target.name, errors)
+                });
+                break;
+        }
+
     }
 
     render() {
+        const { student } = this.props;
+        const { studentData, disabled, errors } = this.state;
         return (
             <div className="container-fluid">
-            
+
                 <div className="container">
                     <div className="student-form-wrapper">
                         <form onSubmit={(ev) => this.submit(ev)} method="post">
@@ -40,6 +80,7 @@ class StudentManagment extends Component {
 
                                 ]}
                                 onChange={(ev) => this.setState({ [ev.target.name]: ev.target.value })}
+                                errors={errors}
                             />
 
                             <Input
@@ -48,14 +89,15 @@ class StudentManagment extends Component {
                                 name="identityValue"
                                 id="identityValue"
                                 onChange={(ev) => this.setState({ [ev.target.name]: ev.target.value })}
+                                errors={errors}
                             />
-
-                                <button type="submit">Search</button>
-
+                            <button type="submit">Search</button>
                         </form>
                     </div>
                 </div>
-                {this.props.student? this.props.student.fullName:"Not found"}
+                {this.props.student && <StudentData errors={errors} data={studentData} parentThis={this} onChange={(ev) => this.edit(ev)} disabled={disabled} />}
+                {this.props.student && <button type="button" onClick={(ev) => this.setState({ disabled: false })}>Edit</button>}
+                {this.props.student && <button type="button">Approve</button>}
             </div>
         )
     }

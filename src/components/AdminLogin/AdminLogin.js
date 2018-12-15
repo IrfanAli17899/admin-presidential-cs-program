@@ -14,7 +14,7 @@ class AdminLogin extends Component {
             password: "",
             errors: {
                 hasError: false,
-                obj: {},
+                errorsObj: {},
                 simpleError: "",
             }
         }
@@ -50,11 +50,12 @@ class AdminLogin extends Component {
                                 <h3>Admin Sign in</h3>
                                 {errors.hasError && <p>{errors.simpleError}</p>}
                                 <Input
-                                    label="Username "
+                                    label="Username"
                                     type="text"
                                     name="username"
                                     id="username"
                                     onChange={(ev) => this.setState({ [ev.target.name]: ev.target.value })}
+                                    errors={errors}                                
                                 />
 
                                 <Input
@@ -63,6 +64,7 @@ class AdminLogin extends Component {
                                     name="password"
                                     id="password"
                                     onChange={(ev) => this.setState({ [ev.target.name]: ev.target.value })}
+                                    errors={errors}                              
                                 />
                                 <button type="submit">Sign In</button>
                             </form>
